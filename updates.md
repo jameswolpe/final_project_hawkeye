@@ -6,3 +6,6 @@ Did research if a machine learning could actually beat the sportsbooks for diffe
 
 ## March 23 begining of class
 Decided on working with tennis  and found two data sets for it. One small data set that makes some hayk-eye data available (found on github from a CrowdANALYTIX competition) and a crowd sourced data set that logs tennis matches. The goal will be to analize forced and unforced errors by analyzing if "Wardlaw directionals" work.
+
+## March 23 end of class
+Spent much of class figuring out setting up git on my new computer. Once completed I read some work from (https://github.com/Laurae2/Laurae) and began to decide how to classify directional shots. Realized I need a category to classify shot quality based on speed and topspin.

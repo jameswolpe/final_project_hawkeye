@@ -1,0 +1,81 @@
+---
+title: "Untitled"
+author: "James Wolpe"
+date: "3/25/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+<Code from https://rpubs.com/nina_fujii/825023>
+```{r}
+#coordinates of the baseline + side line 
+#save the coordinates as a data frame as "base_side_line"
+base_side_line <- data.frame(
+  x = c(0, 0, 23.77, 23.77, 0),
+  y = c(0, 10.97, 10.97, 0, 0)
+)
+#coordinates of the service line and center line 
+#save the coordinates as a data frame as "serves_center_line"
+serves_center_line <- data.frame(
+  x = c(5.585, 5.585, 5.585, 18.385, 18.385, 18.385),
+  y = c(1.37, 9.6, 5.485, 5.485, 1.37, 9.6)
+)
+
+#Plot the tennis court 
+##save the tennis court with name 'court'
+court <- ggplot() +
+  geom_path(data = base_side_line, aes(x = x, y = y)) +
+  geom_path(data = serves_center_line, aes(x = x, y = y)) +
+  geom_path(aes(x = c(23.77, 0), y = c(1.37, 1.37))) + # include lower singles lines
+  geom_path(aes(x = c(23.77, 0), y = c(9.6, 9.6))) + # include upper singles lines
+  geom_path(aes(x = c(11.985, 11.985), y = c(0, 10.97)), lty = 2) + # include dotted net line
+  ylim(c(-1, 11.97)) + xlim(c(-4, 27.77)) + # zoom out 
+  theme_void()
+
+court
+```
+
+
+
+```{r}
+# create my own directional lines on the court
+court <- ggplot() +
+  geom_path(data = base_side_line, aes(x = x, y = y)) +
+  geom_path(data = serves_center_line, aes(x = x, y = y)) +
+  geom_path(aes(x = c(23.77, 0), y = c(1.37, 1.37))) + # include lower singles lines
+  geom_path(aes(x = c(23.77, 0), y = c(9.6, 9.6))) + # include upper singles lines
+  geom_path(aes(x = c(11.985, 11.985), y = c(0, 10.97)), lty = 2) + # include dotted net line
+  geom_path(aes(x = c(23.77, 0), y = c(3.839, 3.839)), lty = 2, color = "red") +  # my new line for the bottom directional
+  geom_path(aes(x = c(23.77, 0), y = c(7.131, 7.131)), lty = 2, color = "red") +
+  ylim(c(-1, 11.97)) + xlim(c(-4, 27.77)) + # zoom out 
+  theme_void()
+
+court
+```
+
+
+```{r}
+# read in the full data set
+points_data <- read_csv("data/charting-m-points.csv")
+```
+# Notes on Coding
+## Serves
+Direction: 4 = out wide, 5 = body, and 6 = down the T.
+
+
+## Exceptions 
+### Serves
++ is used for serve and volley
+* is used for ace serves
+# is used for unreturnable serves (same as forced error)
+@ is used for unforced errors
+0 is used on serve if the location is not known
+c is used for let serves
+

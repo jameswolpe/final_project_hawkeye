@@ -7,3 +7,7 @@ Project is a shinyapp that graphs slu baseball data by player
 
 Grace Wysocki
 Working on a project to visualize contaminated water in the US. Was going to do a blogdown but is now thinking of doing a shiny app. Current problems are that the data set is very large with multiple contaminants for each location. 
+
+## March 28
+
+Clara is working with brewery data and making a shiny app with a leaflet where you can select a city and view its brewery, as well as a page where you can view the ABV and IBU of a selected beer. She needs to add titles to the graph and decide if she wants to do a second selection for the IBU, ABV graph.

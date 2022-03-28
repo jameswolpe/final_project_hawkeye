@@ -11,4 +11,7 @@ Decided on working with tennis  and found two data sets for it. One small data s
 Spent much of class figuring out setting up git on my new computer. Once completed I read some work from (https://github.com/Laurae2/Laurae) and began to decide how to classify directional shots. Realized I need a category to classify shot quality based on speed and topspin.
 
 ## March 28 begining of class
-Read "pressure tennis" and met with my coach on ways to classify directionals, decided to work with crowd souced data, and found a new data set of a nadal, djokovic match.
+Read "pressure tennis" and met with my coach on ways to classify directionals, decided to work with crowd souced data, and found a new data set of a Nadal, Djokovic match.
+
+## March 28 end of class
+Loaded in the data and began taking notes on how it was classified, added to a plot I found online to include directional lines in red. 

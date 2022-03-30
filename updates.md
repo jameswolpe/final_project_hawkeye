@@ -14,4 +14,7 @@ Spent much of class figuring out setting up git on my new computer. Once complet
 Read "pressure tennis" and met with my coach on ways to classify directionals, decided to work with crowd souced data, and found a new data set of a Nadal, Djokovic match.
 
 ## March 28 end of class
-Loaded in the data and began taking notes on how it was classified, added to a plot I found online to include directional lines in red. 
+Loaded in the data and began taking notes on how it was classified, added to a plot I found online to include directional lines in red.
+
+## March 30
+In my note book drew out all possible point combinations and wrote out their codes, discovered this will be a little more complicated as I will need to look at 3 consecutive shots in a sequence rather than just two (except on the ultimate shot and the serve) to know where the player of interest was located when the penultimate shot of interest comes. 

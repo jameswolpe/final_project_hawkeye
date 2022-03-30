@@ -64,13 +64,38 @@ court
 ```{r}
 # read in the full data set
 points_data <- read_csv("data/charting-m-points.csv")
+
+NK_NB_match_data<- points_data %>% 
+  # making the data set easier to work with by only selecting one match
+  filter(match_id == "20220310-M-Indian_Wells_Masters-R128-Sebastian_Baez-Nick_Kyrgios") %>% 
+  #separate(col = match_id, into = c(Player1, Player2))
+  select(c(1,2,12,13,14,15,16,19,30)) %>%
+  rename(FirstServe = `1st`,
+         SecondServe = `2nd`,
+         SecondServeTF = `2ndSV`) %>%
+  mutate(point = if_else(SecondServeTF == is.na(SecondServeTF), 
+          true = SecondServe,
+          false = NA_character_))
+
 ```
 # Notes on Coding
+
 ## Serves
 Direction: 4 = out wide, 5 = body, and 6 = down the T.
 
+## Rally Sequence
+f = forehand
+b = backhand
 
-## Exceptions 
+r = forehand slice (including defensive chips, but not drop shots)
+s = backhand slice (including defensive chips, but not drop shots)
+
+## Direction
+1 = to a right-hander's forehand side
+2 = down the middle of the court (middle 40% of the court)
+3 = to a right-hander's backhand side
+
+## Exceptions (For now deleting if any occur)
 ### Serves
 + is used for serve and volley
 * is used for ace serves
@@ -78,4 +103,33 @@ Direction: 4 = out wide, 5 = body, and 6 = down the T.
 @ is used for unforced errors
 0 is used on serve if the location is not known
 c is used for let serves
+
+### Rally sequence
+v = forehand volley
+z = backhand volley
+(see below for an optional additional code to indicate a stop volley/drop volley)
+
+o = standard overhead/smash
+p = "backhand" overhead/smash
+
+u = forehand drop shot
+y = backhand drop shot
+
+l = forehand lob
+m = backhand lob
+
+h = forehand half-volley
+i = backhand half-volley
+
+j = forehand swinging volley
+k = backhand swinging volley
+
+t = all trick shots, including behind-the-back, between-the-legs, and "tweeners."
+
+q = any unknown shot
+
+### Direction
+0 = unknown direction
+
+
 

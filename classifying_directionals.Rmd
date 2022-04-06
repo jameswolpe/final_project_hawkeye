@@ -11,7 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(readxl)
 ```
+
 
 <Code from https://rpubs.com/nina_fujii/825023>
 ```{r}
@@ -61,23 +63,6 @@ court
 ```
 
 
-```{r}
-# read in the full data set
-points_data <- read_csv("data/charting-m-points.csv")
-
-NK_NB_match_data<- points_data %>% 
-  # making the data set easier to work with by only selecting one match
-  filter(match_id == "20220310-M-Indian_Wells_Masters-R128-Sebastian_Baez-Nick_Kyrgios") %>% 
-  #separate(col = match_id, into = c(Player1, Player2))
-  select(c(1,2,12,13,14,15,16,19,30)) %>%
-  rename(FirstServe = `1st`,
-         SecondServe = `2nd`,
-         SecondServeTF = `2ndSV`) %>%
-  mutate(point = if_else(SecondServeTF == is.na(SecondServeTF), 
-          true = SecondServe,
-          false = NA_character_))
-
-```
 # Notes on Coding
 
 ## Serves
@@ -130,6 +115,61 @@ q = any unknown shot
 
 ### Direction
 0 = unknown direction
+
+```{r}
+# read in the full data set
+points_data <- read_csv("data/charting-m-points.csv")
+match_data <- read_csv("data/charting-m-matches.csv")
+combined_left <- left_join(points_data, match_data, by = c("match_id" = "match_id"))
+# merge to get players height in the data set
+atp_players <- read_csv("data/atp_players.csv")
+# Will have to unite the players in this data set by first and last name and either only look at the winner of each match or pivot longer (code from the atp shiny app) to compare height of players over the years.
+
+
+NK_NB_match_data<- points_data %>% 
+  # making the data set easier to work with by only selecting one match
+  filter(match_id == "20220310-M-Indian_Wells_Masters-R128-Sebastian_Baez-Nick_Kyrgios") 
+
+NK_NB_match_data2 <- combined_left %>% 
+  select(c( Pt, `1st`, `2nd`, `2ndSV`,isForced, isUnforced, PtWinner, rallyCount, match_id, isAce, isDouble, Svr, Ret, Serving,)) %>%
+ #separate(col = match_id, into = c("match_id", "2","3","4","5","6","7","8","9","10" sep = "-")) %>%
+  rename(FirstServe = `1st`,
+         SecondServe = `2nd`,
+         SecondServeTF = `2ndSV`) 
+
+# Get the right columns
+NK_NB_match_data3 <- NK_NB_match_data2 %>%
+  mutate(Point = if_else(is.na(SecondServeTF), 
+          true = FirstServe,
+          false = NA_character_)) %>% 
+  unite(points, Point, SecondServe, na.rm = TRUE) %>% 
+  select(-FirstServe, -SecondServeTF)
+
+# Filter Aces, double faults, and forced errors off the first serve
+ NK_NB_match_data4 <- NK_NB_match_data3 %>% 
+  filter(isAce == FALSE,
+         isDouble == FALSE) %>%
+  select(-isDouble, -isAce)
+   
+ NK_NB_match_data5 <-  NK_NB_match_data4 %>%
+   #Need an and and an or to keep rally count > 1 and forced is false
+  filter(rallyCount != 1 | rallyCount == 1 & isForced == FALSE)
+  
+  #filter points with unknown shots
+
+```
+
+
+Comparing Atp and Wta rally length
+```{r}
+points_data <- read_csv("data/charting-m-points.csv")
+## look at the average rally length
+points_data %>% summarise(mean(rallyCount, na.rm = TRUE))
+atp_rally_length <- points_data %>% 
+  mutate(FirstFour = rallyCount <= 4, 
+         FiveToTen = between(rallyCount, 5, 10),
+         TenToTwenty = between(rallyCount, 11, 20))
+```
 
 
 

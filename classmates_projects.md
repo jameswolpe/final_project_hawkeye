@@ -14,3 +14,6 @@ Clara is working with brewery data and making a shiny app with a leaflet where y
 
 ## March 30
 Patrick is working on a project with Mario cart data. Making a shiny apps using the starts of the car wheels and gliders, where you can select one of each and view the combined stats. A problem he has is the names of some of the variables are not correct and he will probably have to manually rename them.
+
+## April 6 
+Alex is working on a project where he is making a shiny app that looks at NFL quarterbacks combine data and allows the user to input a pretend quarterback's stats and see how they stack up. He is making a second tab that does the same with college stats data. A problem he has run into is making the graphs look good.

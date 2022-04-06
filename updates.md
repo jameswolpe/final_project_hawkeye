@@ -22,3 +22,6 @@ In my note book drew out all possible point combinations and wrote out their cod
 ## March 30 end of class 
 Worked on cleaning up the data and making new variables (shortened the data set to just one match for the time being to make it easier), I also finished writing up the classification of shots sections.
 
+## April 6th begining of class
+Met with my coach and decided that directionals are a little ambitious, while I will still attempt to complete this task I will begin playing around with the data set and making a comparison of atp and wta points and players. I also combined and began cleaning up data that inclued more onformation about the players.
+

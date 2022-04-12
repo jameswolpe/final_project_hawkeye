@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(readxl)
+library(lubridate)
 ```
 
 
@@ -159,6 +160,51 @@ NK_NB_match_data3 <- NK_NB_match_data2 %>%
 
 ```
 
+Comparing atp and wta height over years
+```{r}
+#read in the data
+atp_players <- read_csv("data/atp_players.csv")
+charting_m_matches <- read_csv("data/charting-m-matches.csv")
+
+# Create a player column to join the two data frames
+atp_players <- atp_players %>% 
+  unite("player", c(name_first, name_last), sep = " ")
+
+# combine the player 1 and two columns into one long column
+charting_m_matches <- charting_m_matches %>% pivot_longer(c("Player 1", "Player 2"), values_to = "player")
+
+height_full<-inner_join(atp_players, charting_m_matches, by = c("player" = "player")) %>%
+
+# convert the date with lubridate
+  mutate(Date = ymd(Date)) %>%
+  filter(!is.na(height))
+
+ggplot(data = height_full, aes(x = Date, y = height)) +
+  geom_smooth()
+```
+
+```{r}
+wta_players <- read_csv("data/wta_players.csv")
+charting_w_matches <- read_csv("data/charting-w-matches.csv")
+
+# Create a player column to join the two data frames
+wta_players <- wta_players %>% 
+  unite("player", c(name_first, name_last), sep = " ")
+
+# combine the player 1 and two columns into one long column
+charting_w_matches <- charting_w_matches %>% pivot_longer(c("Player 1", "Player 2"), values_to = "player")
+
+height_w_full<-inner_join(wta_players, charting_w_matches, by = c("player" = "player")) %>%
+
+# convert the date with lubridate
+  mutate(Date = ymd(Date)) %>%
+  filter(!is.na(height))
+
+ggplot(data = height_w_full, aes(x = Date, y = height)) +
+  geom_smooth()
+
+```
+
 
 Comparing Atp and Wta rally length
 ```{r}
@@ -166,10 +212,23 @@ points_data <- read_csv("data/charting-m-points.csv")
 ## look at the average rally length
 points_data %>% summarise(mean(rallyCount, na.rm = TRUE))
 atp_rally_length <- points_data %>% 
+  filter(!is.na(rallyCount))%>%
   mutate(FirstFour = rallyCount <= 4, 
-         FiveToTen = between(rallyCount, 5, 10),
-         TenToTwenty = between(rallyCount, 11, 20))
+         FiveToNine= between(rallyCount, 5, 9),
+         TenPlus = rallyCount >= 10)
+atp_rally_length_sum <- atp_rally_length %>% 
+  summarise(FirstFour= mean(FirstFour) *100,
+            FiveToNine= mean(FiveToNine) *100,
+              TenPlus = mean(TenPlus) *100
+              )
+atp_rally_length_summarise <- atp_rally_length %>% filter(rallyCount < 10) %>% group_by(rallyCount)%>% summarise(ncount = sum(rallyCount))
+
+ggplot(atp_rally_length_summarise, aes(x = rallyCount, y = ncount)) +
+  geom_col()
 ```
 
+```{r}
+
+```
 
 

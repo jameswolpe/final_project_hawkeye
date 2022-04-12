@@ -26,4 +26,7 @@ Worked on cleaning up the data and making new variables (shortened the data set 
 Met with my coach and decided that directionals are a little ambitious, while I will still attempt to complete this task I will begin playing around with the data set and making a comparison of atp and wta points and players. I also combined and began cleaning up data that inclued more onformation about the players.
 
 ## April 6th end of class
-Worked on adding the height variable to players but found that player_id was not in the match data (will have to unite first and last name and join by name). Also began grouping rallies by shot length to compare atp and wta. Fixed the problem of filtering out forced errors off of serve for my hawkeye data.
+Worked on adding the height variable to players but found that player_id was not in the match data. Also began grouping rallies by shot length to compare atp and wta. Fixed the problem of filtering out forced errors off of serve for my hawkeye data.
+
+## April 11th begining of class
+Read two articles from TennisAbstract blog, about return and serve effectiveness. Created a visualization for the height of male and female tennis players over the years. Created a bar chart of rally lengths, created summary statistics of rally lengths.

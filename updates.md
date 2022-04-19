@@ -32,4 +32,7 @@ Worked on adding the height variable to players but found that player_id was not
 Read two articles from TennisAbstract blog, about return and serve effectiveness. Created a visualization for the height of male and female tennis players over the years. Created a bar chart of rally lengths, created summary statistics of rally lengths.
 
 ## April 13th begining of class
-Created a new visualization with height as a predictor of rally length and began one with height as a predictor of aces in a match. Began to learn "stringr" to continue working with the directionals data, will work with a few diifferent permiatations and have a shiny app where you can select the player.
+Created a new visualization with height as a predictor of rally length and began one with height as a predictor of aces in a match. Began to learn "stringr" to continue working with the directionals data, will work with a few different permutations and have a shiny app where you can select the player.
+
+## April 18th
+Worked with stringr to begin dropping points and tried to separate points into different columns. Also separated into two different rmd's, one for directionals, one for height visualisations.

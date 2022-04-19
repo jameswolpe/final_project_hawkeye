@@ -1,0 +1,154 @@
+---
+title: "Height Visualisations"
+author: "James Wolpe"
+date: "4/18/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(lubridate)
+```
+
+<Code from https://rpubs.com/nina_fujii/825023>
+```{r}
+#coordinates of the baseline + side line 
+#save the coordinates as a data frame as "base_side_line"
+base_side_line <- data.frame(
+  x = c(0, 0, 23.77, 23.77, 0),
+  y = c(0, 10.97, 10.97, 0, 0)
+)
+#coordinates of the service line and center line 
+#save the coordinates as a data frame as "serves_center_line"
+serves_center_line <- data.frame(
+  x = c(5.585, 5.585, 5.585, 18.385, 18.385, 18.385),
+  y = c(1.37, 9.6, 5.485, 5.485, 1.37, 9.6)
+)
+
+#Plot the tennis court 
+##save the tennis court with name 'court'
+court <- ggplot() +
+  geom_path(data = base_side_line, aes(x = x, y = y)) +
+  geom_path(data = serves_center_line, aes(x = x, y = y)) +
+  geom_path(aes(x = c(23.77, 0), y = c(1.37, 1.37))) + # include lower singles lines
+  geom_path(aes(x = c(23.77, 0), y = c(9.6, 9.6))) + # include upper singles lines
+  geom_path(aes(x = c(11.985, 11.985), y = c(0, 10.97)), lty = 2) + # include dotted net line
+  ylim(c(-1, 11.97)) + xlim(c(-4, 27.77)) + # zoom out 
+  theme_void()
+
+court
+```
+
+
+
+```{r}
+# create my own directional lines on the court
+court <- ggplot() +
+  geom_path(data = base_side_line, aes(x = x, y = y)) +
+  geom_path(data = serves_center_line, aes(x = x, y = y)) +
+  geom_path(aes(x = c(23.77, 0), y = c(1.37, 1.37))) + # include lower singles lines
+  geom_path(aes(x = c(23.77, 0), y = c(9.6, 9.6))) + # include upper singles lines
+  geom_path(aes(x = c(11.985, 11.985), y = c(0, 10.97)), lty = 2) + # include dotted net line
+  geom_path(aes(x = c(23.77, 0), y = c(3.839, 3.839)), lty = 2, color = "red") +  # my new line for the bottom directional
+  geom_path(aes(x = c(23.77, 0), y = c(7.131, 7.131)), lty = 2, color = "red") +
+  ylim(c(-1, 11.97)) + xlim(c(-4, 27.77)) + # zoom out 
+  theme_void()
+
+court
+```
+
+
+Comparing atp and wta height over years
+```{r}
+#read in the data
+atp_players <- read_csv("data/atp_players.csv")
+charting_m_matches <- read_csv("data/charting-m-matches.csv")
+
+# Create a player column to join the two data frames
+atp_players <- atp_players %>% 
+  unite("player", c(name_first, name_last), sep = " ")
+
+# combine the player 1 and two columns into one long column
+charting_m_matches <- charting_m_matches %>% pivot_longer(c("Player 1", "Player 2"), values_to = "player")
+
+height_year_df<-inner_join(atp_players, charting_m_matches, by = c("player" = "player")) %>%
+
+# convert the date with lubridate
+  mutate(Date = ymd(Date)) %>%
+  filter(!is.na(height))
+
+ggplot(data = height_year_df, aes(x = Date, y = height)) +
+  geom_smooth() 
+
+
+```
+
+More visualizations for height as a predictior of things
+```{r}
+height_full_df <- left_join(height_year_df, points_data, by = c("match_id" = "match_id")) 
+
+#visualization of height as a predictor of rally length
+ggplot(data = height_full_df, aes(x = height, y = rallyCount)) + 
+  geom_smooth()
+
+#height_ace_df <- height_full_df %>% group_by(match_id) %>% summarise(nAces = count(isAce == "TRUE"))
+
+height_ace_df <- height_full_df %>% mutate(isAce1 = if_else(isAce == "TRUE", 
+                                                true = 1,
+                                                false = 0)) %>% 
+  group_by(match_id, Set1, Set2, Gm1, Gm2) %>%
+  summarise(nAces = count(isAce1))
+
+ggplot(data = height_ace_df, aes(x = height, y = nAces)) +
+  geom_smooth()
+```
+
+```{r}
+wta_players <- read_csv("data/wta_players.csv")
+charting_w_matches <- read_csv("data/charting-w-matches.csv")
+
+# Create a player column to join the two data frames
+wta_players <- wta_players %>% 
+  unite("player", c(name_first, name_last), sep = " ")
+
+# combine the player 1 and two columns into one long column
+charting_w_matches <- charting_w_matches %>% pivot_longer(c("Player 1", "Player 2"), values_to = "player")
+
+height_w_full<-inner_join(wta_players, charting_w_matches, by = c("player" = "player")) %>%
+
+# convert the date with lubridate
+  mutate(Date = ymd(Date)) %>%
+  filter(!is.na(height))
+
+ggplot(data = height_w_full, aes(x = Date, y = height)) +
+  geom_smooth()
+
+```
+
+
+Comparing Atp and Wta rally length
+```{r}
+points_data <- read_csv("data/charting-m-points.csv")
+## look at the average rally length
+points_data %>% summarise(mean(rallyCount, na.rm = TRUE))
+atp_rally_length <- points_data %>% 
+  filter(!is.na(rallyCount))%>%
+  mutate(FirstFour = rallyCount <= 4, 
+         FiveToNine= between(rallyCount, 5, 9),
+         TenPlus = rallyCount >= 10)
+atp_rally_length_sum <- atp_rally_length %>% 
+  summarise(FirstFour= mean(FirstFour) *100,
+            FiveToNine= mean(FiveToNine) *100,
+              TenPlus = mean(TenPlus) *100
+              )
+atp_rally_length_summarise <- atp_rally_length %>% filter(rallyCount < 10) %>% group_by(rallyCount)%>% summarise(ncount = sum(rallyCount))
+
+ggplot(atp_rally_length_summarise, aes(x = rallyCount, y = ncount)) +
+  geom_col()
+```
+

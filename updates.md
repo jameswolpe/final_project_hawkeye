@@ -36,3 +36,6 @@ Created a new visualization with height as a predictor of rally length and began
 
 ## April 18th
 Worked with stringr to begin dropping points and tried to separate points into different columns. Also separated into two different rmd's, one for directionals, one for height visualisations.
+
+## April 20th begining of class
+Applied code to split up each point by shot, created a new variable that was shot number in sequence (using a loop) so that pivot wider could create a new column for shot number in sequence.

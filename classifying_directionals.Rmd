@@ -115,10 +115,52 @@ NK_NB_match_data6 <- NK_NB_match_data5 %>%
 NK_NB_match_data7 <- NK_NB_match_data6 %>% 
   mutate(`1` = str_sub(string =points, start =1, end =1))
 
-# classify a shot as a character followed by a digit
-shot <- "([:alpha:]) (?=[:digit:]+)"
+points_vec <- NK_NB_match_data6 %>% slice(1:10) %>% pull(points)
 
-#didnt work
-NK_NB_match_data8 <- NK_NB_match_data7 %>% 
-  str_match(shot)
+# classify a shot as a character followed by a digit
+shot <- "([:alpha:]?=[:digit:]+)"
+
+
+vals <- strsplit_keep(NK_NB_match_data6$points, "[fbrsvzopuylmhijkt]", type = "before")
+vals1 <- map_df(vals, ~data.frame(value = .x), .id = "id")
+
+vals1$id <- as.numeric(vals1$id)
+
+vals1sum <- vals1 %>% group_by(id) %>% summarise(
+  count = n() 
+)
+
+vals1sum1 <- vals1sum$count %>% as.numeric()
+
+
+
+y <- (1:vals1sum1[1])
+for(i in 2:77){
+  y <- c(y, (1:vals1sum1[i]), SIMPLIFY = FALSE)
+}
+
+z1 <- as.data.frame(y) %>% 
+  filter(y != 0)
+
+merge1 <- merge(vals1, z1,
+                by = 'row.names', 
+                all = TRUE)
+merge1 <- merge1 %>% as.numeric(id)
+merge1$id <- as.numeric(merge1$id)
+merge1$Row.names <- as.numeric(merge1$Row.names)
+
+merge1 <- merge1[order(merge1$Row.names),]
+
+
+merge2 <- merge1 %>% pivot_wider(names_from = y,
+                       values_from = value)
+
+merge3 <- merge2 %>% group_by(id)%>%
+   summarise_all(list(~ .[!is.na(.)][1]))
+
+
+
+#Make a new row number and full join both data sets by that
+data_test <- data.frame(1:nrow(vals1$id))
+
 ```

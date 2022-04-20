@@ -78,12 +78,14 @@ atp_players <- read_csv("data/atp_players.csv")
 # Will have to unite the players in this data set by first and last name and either only look at the winner of each match or pivot longer (code from the atp shiny app) to compare height of players over the years.
 
 
-NK_NB_match_data<- points_data %>% 
+NK_NB_match_data<- combined_left %>% 
   # making the data set easier to work with by only selecting one match
   filter(match_id == "20220310-M-Indian_Wells_Masters-R128-Sebastian_Baez-Nick_Kyrgios") 
 
 NK_NB_match_data2 <- NK_NB_match_data %>% 
-  select(c( Pt, `1st`, `2nd`, `2ndSV`,isForced, isUnforced, PtWinner, rallyCount, match_id, isAce, isDouble, Svr, Ret, Serving,)) %>%
+  select(c( Pt, `1st`, `2nd`, `2ndSV`,isForced, isUnforced, PtWinner, rallyCount, match_id, isAce, isDouble, Svr, Ret, Serving,)) 
+
+NK_NB_match_data2 <- NK_NB_match_data %>%
   rename(FirstServe = `1st`,
          SecondServe = `2nd`,
          SecondServeTF = `2ndSV`) 
@@ -107,15 +109,10 @@ NK_NB_match_data3 <- NK_NB_match_data2 %>%
   filter(rallyCount != 1 | rallyCount == 1 & isForced == FALSE) 
 
   #filter points with unknown shots
-  # Filtered any serves with unknown direction, and any returns that were dropshots
- # Filter 
+  # Filtered any serves with unknown direction
+ # Filter points that don;t have direction and depth a number followed by two digits.
 NK_NB_match_data6 <- NK_NB_match_data5 %>%
-  filter(str_detect(string = points, pattern = "^[456][^yu][456(?={2}[:digit:])]"))
-
-NK_NB_match_data7 <- NK_NB_match_data6 %>% 
-  mutate(`1` = str_sub(string =points, start =1, end =1))
-
-points_vec <- NK_NB_match_data6 %>% slice(1:10) %>% pull(points)
+  filter(str_detect(string = points, pattern = "^[456][456(?=[:alpha:]?={2}[:digit:])]"))
 
 # classify a shot as a character followed by a digit
 shot <- "([:alpha:]?=[:digit:]+)"
@@ -124,43 +121,24 @@ shot <- "([:alpha:]?=[:digit:]+)"
 vals <- strsplit_keep(NK_NB_match_data6$points, "[fbrsvzopuylmhijkt]", type = "before")
 vals1 <- map_df(vals, ~data.frame(value = .x), .id = "id")
 
-vals1$id <- as.numeric(vals1$id)
 
-vals1sum <- vals1 %>% group_by(id) %>% summarise(
-  count = n() 
-)
+merge1 <- vals1 %>% group_by(id) %>%
+  mutate(shot_num = row_number())
 
-vals1sum1 <- vals1sum$count %>% as.numeric()
-
-
-
-y <- (1:vals1sum1[1])
-for(i in 2:77){
-  y <- c(y, (1:vals1sum1[i]), SIMPLIFY = FALSE)
-}
-
-z1 <- as.data.frame(y) %>% 
-  filter(y != 0)
-
-merge1 <- merge(vals1, z1,
-                by = 'row.names', 
-                all = TRUE)
-merge1 <- merge1 %>% as.numeric(id)
-merge1$id <- as.numeric(merge1$id)
-merge1$Row.names <- as.numeric(merge1$Row.names)
-
-merge1 <- merge1[order(merge1$Row.names),]
-
-
-merge2 <- merge1 %>% pivot_wider(names_from = y,
+merge2 <- merge1 %>% pivot_wider(names_from = shot_num,
                        values_from = value)
 
-merge3 <- merge2 %>% group_by(id)%>%
-   summarise_all(list(~ .[!is.na(.)][1]))
+merge3 <- bind_cols(merge2, NK_NB_match_data6) %>%
+  pivot_longer(cols = c(2:23),
+               names_to = "shot_in_seq",
+               values_to = "shot") %>%
+  filter(!is.na(shot))
 
+merge3$shot_in_seq <- as.numeric(merge3$shot_in_seq)
 
+merge3 <- merge3 %>% mutate(player = if_else(shot_in_seq %% 2 == 1,
+                                             true = `Player 1`,
+                                             false = `Player 2`))
 
-#Make a new row number and full join both data sets by that
-data_test <- data.frame(1:nrow(vals1$id))
 
 ```

@@ -39,3 +39,6 @@ Worked with stringr to begin dropping points and tried to separate points into d
 
 ## April 20th begining of class
 Applied code to split up each point by shot, created a new variable that was shot number in sequence (using a loop) so that pivot wider could create a new column for shot number in sequence.
+
+## April 20th end of class 
+Used new code to make shot number in sequence more simple, pivoted the data set longer so that each point is stacked on top of each other with a new column shot in sequence. Made a new column that has which player hit what shot in sequence.

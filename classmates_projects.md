@@ -17,3 +17,6 @@ Patrick is working on a project with Mario cart data. Making a shiny apps using 
 
 ## April 6 
 Alex is working on a project where he is making a shiny app that looks at NFL quarterbacks combine data and allows the user to input a pretend quarterback's stats and see how they stack up. He is making a second tab that does the same with college stats data. A problem he has run into is making the graphs look good.
+
+## April 20
+Lilly is working on making a blogdown where she looks at different visualizations of billionaires, she is currently working on making new visualizations and is working on cleaning up her plotly of all billionaires sorted by age and net worth. A visualization I thought was really interesting was her visualization of where and how much NFL oweners donate to political campaigns. 

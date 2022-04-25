@@ -43,5 +43,8 @@ Applied code to split up each point by shot, created a new variable that was sho
 ## April 20th end of class 
 Used new code to make shot number in sequence more simple, pivoted the data set longer so that each point is stacked on top of each other with a new column shot in sequence. Made a new column that has which player hit what shot in sequence.
 
-## April 25th beginning of class commit
-Created new variables to determine if it was ultimate or penultimate shot, Divided shot column into stroke, direction and depth
+## April 25th beginning of class
+Created new variables to determine if it was ultimate or penultimate shot, Divided shot column into stroke, direction and depth, filtered out more points so the set only included baseline rallies. And began summarize that data.
+
+## April 25th end of class
+Made it so the number of columns that signifies rally length automatically updates. Worked with preparing shots for shiny app, made empty cases NA. Created new columns for direction, stroke and depth of the shot after. Put the delim script directly in the program. Started to create the shiny app.

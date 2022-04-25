@@ -76,8 +76,10 @@ combined_left <- left_join(points_data, match_data, by = c("match_id" = "match_i
 # merge to get players height in the data set
 atp_players <- read_csv("data/atp_players.csv")
 # Will have to unite the players in this data set by first and last name and either only look at the winner of each match or pivot longer (code from the atp shiny app) to compare height of players over the years.
+```
 
 
+```{r}
 NK_NB_match_data<- combined_left %>% 
   # making the data set easier to work with by only selecting one match
   filter(match_id == "20220310-M-Indian_Wells_Masters-R128-Sebastian_Baez-Nick_Kyrgios") 
@@ -117,12 +119,15 @@ NK_NB_match_data6 <- NK_NB_match_data5 %>%
 
 NK_NB_match_data6 <- NK_NB_match_data6 %>%
   filter(str_detect(string = points, pattern ="([:symbol:])") == FALSE,
-         str_detect(string = points, pattern ="[vzopik;t!]") == FALSE) 
+         str_detect(string = points, pattern ="[vzopik;t!]") == FALSE)
+```
 
 
+```{r}
 # classify a shot as a character followed by a digit
 shot <- "([:alpha:]?=[:digit:]+)"
 
+source("~/Downloads/james_strings.R")
 
 vals <- strsplit_keep(NK_NB_match_data6$points, "[fbrsvzopuylmhijkt]", type = "before")
 vals1 <- map_df(vals, ~data.frame(value = .x), .id = "id")
@@ -134,23 +139,26 @@ merge1 <- vals1 %>% group_by(id) %>%
 merge2 <- merge1 %>% pivot_wider(names_from = shot_num,
                        values_from = value)
 
+plength <- ncol(merge2)
 
 merge3 <- bind_cols(merge2, NK_NB_match_data6) %>%
-  pivot_longer(cols = c(2:21),
+  pivot_longer(cols = c(2:all_of(plength)),
                names_to = "shot_in_seq",
                values_to = "shot") %>%
   filter(!is.na(shot))
 
 merge3$shot_in_seq <- as.numeric(merge3$shot_in_seq)
+```
 
+
+```{r}
 merge3 <- merge3 %>% mutate(player = if_else(shot_in_seq %% 2 == 1,
                                              true = `Player 1`,
                                              false = `Player 2`))
 # create previous shot variable
-merge3 <- merge3 %>% mutate(lag_shot = lag(shot),
-                            lead_shot = lead(shot)) 
+merge3 <- merge3 %>% mutate(shot_after = lead(shot)) 
 # create ultimate shot and penultimate shot variable
-merge3 <- merge3 %>% mutate(ultimate_shot = if_else(is.na(lead_shot),
+merge3 <- merge3 %>% mutate(ultimate_shot = if_else(is.na(shot_after),
           true = TRUE,
           false = FALSE)) %>%
   mutate(penultimate_shot = lead(ultimate_shot))
@@ -165,5 +173,31 @@ merge3 <- separate(data = merge3,
                    col = direction,
                    into = c("direction","depth"),
                    sep=1) 
+#Create stroke and direction variable for shot_after
+merge3 <- separate(data = merge3,
+                   col = shot_after,
+                   into = c("stroke_after", "direction_after"),
+                   sep=1) 
+
+# Create depth variable for shot_after
+merge3 <- separate(data = merge3,
+                   col = direction_after,
+                   into = c("direction_after","depth_after"),
+                   sep=1)
+# Make blank Cells NA
+merge3 <- merge3 %>% mutate_all(na_if,"")
+```
+
+
+```{r}
+merge3sum <- merge3 %>% filter(player == "Nick Kyrgios",
+                               stroke == "f",
+                               direction == 1) %>% 
+  group_by(direction_after) %>%
+  summarise(count = n())
+```
+
+```{r}
+write.csv(classifying_directionals.Rmd, "classifying_directionals.csv")
 ```
 

@@ -42,3 +42,6 @@ Applied code to split up each point by shot, created a new variable that was sho
 
 ## April 20th end of class 
 Used new code to make shot number in sequence more simple, pivoted the data set longer so that each point is stacked on top of each other with a new column shot in sequence. Made a new column that has which player hit what shot in sequence.
+
+## April 25th beginning of class commit
+Created new variables to determine if it was ultimate or penultimate shot, Divided shot column into stroke, direction and depth

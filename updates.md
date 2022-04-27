@@ -35,7 +35,7 @@ Read two articles from TennisAbstract blog, about return and serve effectiveness
 Created a new visualization with height as a predictor of rally length and began one with height as a predictor of aces in a match. Began to learn "stringr" to continue working with the directionals data, will work with a few different permutations and have a shiny app where you can select the player.
 
 ## April 18th
-Worked with stringr to begin dropping points and tried to separate points into different columns. Also separated into two different rmd's, one for directionals, one for height visualisations.
+Worked with stringr to begin dropping points and tried to separate points into different columns. Also separated into two different rmd's, one for directionals, one for height visualizations.
 
 ## April 20th begining of class
 Applied code to split up each point by shot, created a new variable that was shot number in sequence (using a loop) so that pivot wider could create a new column for shot number in sequence.
@@ -48,3 +48,6 @@ Created new variables to determine if it was ultimate or penultimate shot, Divid
 
 ## April 25th end of class
 Made it so the number of columns that signifies rally length automatically updates. Worked with preparing shots for shiny app, made empty cases NA. Created new columns for direction, stroke and depth of the shot after. Put the delim script directly in the program. Started to create the shiny app.
+
+## April 27th begining of class
+Completed a version of my shiny app that uses a geom column, also continued to sort data such as including forehand and backhand slice data. On my court I made points at each shot direction that will be used on the shiny app.

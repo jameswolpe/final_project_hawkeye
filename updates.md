@@ -51,3 +51,6 @@ Made it so the number of columns that signifies rally length automatically updat
 
 ## April 27th begining of class
 Completed a version of my shiny app that uses a geom column, also continued to sort data such as including forehand and backhand slice data. On my court I made points at each shot direction that will be used on the shiny app.
+
+## April 27th end of class
+Continued working on my shiny app cleaning up the cases one can view, began work on making the court interactive based on the shot selected.

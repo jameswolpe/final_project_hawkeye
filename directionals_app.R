@@ -2,19 +2,7 @@ library(shiny)
 library(tidyverse)
 df <- read_csv("merge3.csv")
 
-df <- df %>% filter(ultimate_shot == FALSE)
-
-merge3sum <- df %>% filter(player == "Nick Kyrgios",
-           stroke == "b",
-           direction == 3,
-           ultimate_shot == FALSE,
-           stroke_after == "b") %>% 
-
-ggplot(data = merge3sum, aes(x = direction_after, y = count)) +
-  geom_col()
-
-df_oneplayer
-
+# Theme = shiny theme 
 ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(selectizeInput(inputId = "playerselect",

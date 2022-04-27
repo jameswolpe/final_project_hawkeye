@@ -23,3 +23,6 @@ Lilly is working on making a blogdown where she looks at different visualization
 
 ## April 25th
 Maddox is working with hospital birth data and is nearly done with her shiny app, she is making cosmetic changes at this point such as making the hospital name larger as well as making the selected line in her line graph stand out more.
+
+## April 27th 
+Maddox has made a new tab that has an about page with some information and is working on grouping her interactive plot by color. Clara is nearly done with her brewery shiny app where you can select a city and it shows the brewery's and you can select the brewery and it shows stats on the different beers.
